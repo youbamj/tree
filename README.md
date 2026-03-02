@@ -1,11 +1,11 @@
 # @youbamj/tree
 
 <p>
-  <a href="https://www.npmjs.com/package/@youbamj/tree">
-    <img src="https://img.shields.io/npm/v/@youbamj/tree" alt="NPM Version" />
+  <a href="https://www.npmjs.com/package/%40youbamj%2Ftree">
+    <img src="https://img.shields.io/npm/v/%40youbamj%2Ftree" alt="NPM Version" />
   </a>
-  <a href="https://www.npmjs.com/package/@youbamj/tree">
-    <img src="https://img.shields.io/npm/l/@youbamj/tree" alt="License" />
+  <a href="https://www.npmjs.com/package/%40youbamj%2Ftree">
+    <img src="https://img.shields.io/npm/l/%40youbamj%2Ftree" alt="License" />
   </a>
 </p>
 
