@@ -132,4 +132,37 @@ describe("getFileTree", () => {
     expect(linked?.type).toBe("symlink");
     expect(linked?.children?.map((child) => child.name)).toContain("hello.txt");
   });
+
+  test("supports maxNodes to cap traversal", async () => {
+    const fixtureDir = await createFixture();
+
+    const tree = await getFileTree({
+      dir: fixtureDir,
+      gitignore: false,
+      maxNodes: 2,
+      sort: "none",
+    });
+
+    expect(tree).toHaveLength(1);
+
+    const root = tree[0];
+    const rootChildren = root?.children ?? [];
+
+    // One slot is used by root itself, so only one child should be included.
+    expect(rootChildren.length).toBe(1);
+  });
+
+  test("supports maxNodes=-1 to disable cap", async () => {
+    const fixtureDir = await createFixture();
+
+    const tree = await getFileTree({
+      dir: fixtureDir,
+      gitignore: false,
+      maxNodes: -1,
+      sort: "none",
+    });
+
+    const rootChildren = tree[0]?.children ?? [];
+    expect(rootChildren.length).toBeGreaterThan(1);
+  });
 });

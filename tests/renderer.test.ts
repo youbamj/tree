@@ -40,4 +40,30 @@ describe("getStringTree", () => {
 └── root
     └── child`);
   });
+
+  test("sanitizes ansi/control characters in labels by default", () => {
+    const value = getStringTree([
+      {
+        name: "\u001b[31mred\u001b[0m\nfile",
+      },
+    ]);
+
+    expect(value).toBe(`·
+└── red\\x0afile`);
+  });
+
+  test("can disable label sanitization", () => {
+    const value = getStringTree(
+      [
+        {
+          name: "\u001b[31mred\u001b[0m",
+        },
+      ],
+      {
+        sanitizeLabels: false,
+      },
+    );
+
+    expect(value).toContain("\u001b[31mred\u001b[0m");
+  });
 });

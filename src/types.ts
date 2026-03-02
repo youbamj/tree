@@ -15,6 +15,7 @@ export interface RenderTreeOptions {
   branch?: string;
   lastBranch?: string;
   vertical?: string;
+  sanitizeLabels?: boolean;
 }
 
 export type SortOrder = "asc" | "desc" | "none";
@@ -27,4 +28,5 @@ export interface GetFileTreeOptions {
   followSymlinks?: boolean;
   sort?: SortOrder;
   gitignore?: boolean;
+  maxNodes?: number;
 }

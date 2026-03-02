@@ -1,3 +1,4 @@
+import type { Stats } from "node:fs";
 import { lstat, readFile, readdir, realpath } from "node:fs/promises";
 import path from "node:path";
 import createIgnore, { type Ignore } from "ignore";
@@ -11,8 +12,12 @@ interface InternalOptions {
   sort: SortOrder;
   ignorePatterns: string[];
   gitignoreMatcher?: Ignore;
+  maxNodes?: number;
+  nodeCount: number;
   visited: Set<string>;
 }
+
+const DEFAULT_MAX_NODES = 10_000;
 
 function normalizeSlashes(input: string): string {
   return input.replace(/\\/g, "/");
@@ -25,6 +30,14 @@ function parseIgnore(ignore?: string | string[]): string[] {
     .map((item) => item.trim())
     .filter(Boolean)
     .map((item) => normalizeSlashes(item.replace(/\/$/, "")));
+}
+
+function normalizeMaxNodes(maxNodes: number): number | undefined {
+  if (maxNodes === -1) return undefined;
+  if (!Number.isInteger(maxNodes) || maxNodes < 1) {
+    throw new Error("maxNodes must be a positive integer or -1 to disable the cap");
+  }
+  return maxNodes;
 }
 
 function shouldIgnoreByPatterns(
@@ -98,7 +111,16 @@ async function buildNode(
   depth: number,
   options: InternalOptions,
 ): Promise<TreeNode | null> {
-  const stats = await lstat(absolutePath);
+  let stats: Stats;
+  try {
+    stats = await lstat(absolutePath);
+  } catch (error) {
+    if (depth === 1) {
+      throw error;
+    }
+    return null;
+  }
+
   const relativePath = normalizeSlashes(path.relative(options.rootDir, absolutePath));
   const name = path.basename(absolutePath);
   const isDirectory = stats.isDirectory();
@@ -115,11 +137,17 @@ async function buildNode(
     return null;
   }
 
+  if (options.maxNodes !== undefined && options.nodeCount >= options.maxNodes) {
+    return null;
+  }
+
   const node: TreeNode = {
     name,
     path: absolutePath,
     type: isDirectory ? "directory" : stats.isSymbolicLink() ? "symlink" : "file",
   };
+
+  options.nodeCount += 1;
 
   if (options.maxDepth !== undefined && depth >= options.maxDepth) {
     return node;
@@ -146,7 +174,13 @@ async function buildNode(
     options.visited.add(targetPath);
   }
 
-  let entries = await readdir(targetPath);
+  let entries: string[];
+  try {
+    entries = await readdir(targetPath);
+  } catch {
+    return node;
+  }
+
   entries = [...entries].sort((a, b) => compareNames(a, b, options.sort));
 
   const children: TreeNode[] = [];
@@ -173,6 +207,7 @@ export async function getFileTree({
   followSymlinks = false,
   sort = "asc",
   gitignore = true,
+  maxNodes = DEFAULT_MAX_NODES,
 }: GetFileTreeOptions): Promise<TreeNode[]> {
   const rootDir = path.resolve(process.cwd(), dir);
   const ignorePatterns = parseIgnore(ignore);
@@ -186,6 +221,8 @@ export async function getFileTree({
     sort,
     ignorePatterns,
     gitignoreMatcher,
+    maxNodes: normalizeMaxNodes(maxNodes),
+    nodeCount: 0,
     visited: new Set<string>(),
   };
 
