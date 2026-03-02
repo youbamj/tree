@@ -54,4 +54,24 @@ describe("ytree CLI", () => {
     expect(fileContent.startsWith("```text\n")).toBe(true);
     expect(fileContent.includes("src")).toBe(true);
   });
+
+  test("supports --max-nodes", async () => {
+    const fixtureDir = await createCliFixture();
+
+    const output =
+      await $`bun run src/cli.ts --json --no-gitignore --sort none --max-nodes 2 ${fixtureDir}`.text();
+    const childNames = rootChildNamesFromJson(output);
+
+    expect(childNames).toHaveLength(1);
+  });
+
+  test("supports --max-nodes -1 to disable cap", async () => {
+    const fixtureDir = await createCliFixture();
+
+    const output =
+      await $`bun run src/cli.ts --json --no-gitignore --sort none --max-nodes -1 ${fixtureDir}`.text();
+    const childNames = rootChildNamesFromJson(output);
+
+    expect(childNames.length).toBeGreaterThan(1);
+  });
 });

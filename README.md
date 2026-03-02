@@ -82,6 +82,7 @@ Options:
   --follow-symlinks       Traverse symbolic links
   --no-gitignore          Do not respect .gitignore rules
   --sort <mode>           Sorting mode: asc | desc | none
+  --max-nodes <n>         Maximum number of nodes to include (default: 10000, use -1 for no cap)
   --json                  Print JSON tree
   -c, --color [name]      Output color (default: "white")
   --no-color              Disable color output
@@ -89,6 +90,9 @@ Options:
 ```
 
 ## Use in your project
+
+`getFileTree()` uses a default safety cap of `10000` nodes.
+Set `maxNodes: -1` to disable the cap.
 
 ### 1) Render a directory tree to string
 
@@ -186,7 +190,8 @@ const output = getStringTree(
   ],
   {
     labelKey: "title",
-    childrenKey: "items"
+    childrenKey: "items",
+    sanitizeLabels: true
   }
 );
 
@@ -209,6 +214,7 @@ Example output:
 - 🎨 Colorized CLI output
 - 🧩 Convert custom arrays/objects to tree strings
 - 🙈 `.gitignore` support by default
+- 🔒 Terminal-safe label sanitization by default
 - ⚡ TypeScript + Bun friendly
 
 ## License

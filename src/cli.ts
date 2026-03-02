@@ -42,6 +42,14 @@ function parseSort(value: string): SortOrder {
   throw new InvalidOptionArgumentError("sort must be one of: asc, desc, none");
 }
 
+function parseMaxNodes(value: string): number {
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || (parsed < 1 && parsed !== -1)) {
+    throw new InvalidOptionArgumentError("max-nodes must be a positive integer or -1");
+  }
+  return parsed;
+}
+
 function collectIgnore(value: string, previous: string[]): string[] {
   const parsed = value
     .split(",")
@@ -82,6 +90,7 @@ program
   .option("--follow-symlinks", "Traverse symbolic links", false)
   .option("--no-gitignore", "Do not respect .gitignore rules")
   .option("--sort <mode>", "Sorting mode", parseSort, "asc" as SortOrder)
+  .option("--max-nodes <n>", "Maximum number of nodes to include", parseMaxNodes)
   .option("--json", "Print JSON tree", false)
   .option("-c, --color [name]", "Output color", "white")
   .option("--no-color", "Disable color output")
@@ -96,6 +105,7 @@ program
       followSymlinks: options.followSymlinks,
       gitignore: options.gitignore,
       sort: options.sort,
+      maxNodes: options.maxNodes,
     });
 
     const rendered = options.json ? JSON.stringify(treeData, null, 2) : getStringTree(treeData);
