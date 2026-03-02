@@ -1,6 +1,6 @@
 {
   "name": "@youbamj/tree",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Render directory and object trees in a clean, modern TypeScript package with CLI support.",
   "type": "module",
   "license": "MIT",
