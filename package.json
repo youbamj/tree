@@ -1,0 +1,63 @@
+{
+  "name": "@youbamj/tree",
+  "version": "0.1.0",
+  "description": "Render directory and object trees in a clean, modern TypeScript package with CLI support.",
+  "type": "module",
+  "license": "MIT",
+  "author": "youbamj",
+  "homepage": "https://github.com/youbamj/tree#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youbamj/tree.git"
+  },
+  "bugs": {
+    "url": "https://github.com/youbamj/tree/issues"
+  },
+  "keywords": ["tree", "cli", "directory", "typescript", "bun"],
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "ytree": "./dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "./dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "bun run src/cli.ts",
+    "test": "bun test",
+    "check:types": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "check": "bun run check:types && bun run lint",
+    "precommit": "lint-staged && bun run check:types",
+    "prepare": "husky",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "npm publish --provenance"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx,json,md}": ["biome check --write"]
+  },
+  "dependencies": {
+    "commander": "^14.0.1",
+    "ignore": "^7.0.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@changesets/cli": "^2.29.7",
+    "@types/bun": "latest",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.0",
+    "typescript": "^5.6.3"
+  }
+}
