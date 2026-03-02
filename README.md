@@ -1,7 +1,7 @@
 # @youbamj/tree
 
-[![npm version](https://img.shields.io/npm/v/@youbamj/tree?logo=npm)](https://www.npmjs.com/package/@youbamj/tree)
-[![license](https://img.shields.io/npm/l/@youbamj/tree)](./LICENSE)
+[![npm version](https://img.shields.io/npm/v/%40youbamj%2Ftree?logo=npm&cacheSeconds=300)](https://www.npmjs.com/package/%40youbamj%2Ftree)
+[![license](https://img.shields.io/npm/l/%40youbamj%2Ftree?cacheSeconds=300)](./LICENSE)
 
 `@youbamj/tree` is a modern TypeScript + Bun package to render directory trees and custom object trees.
 
