@@ -1,5 +1,11 @@
 # @youbamj/tree
 
+## 0.2.1
+
+### Patch Changes
+
+- 794c9b1: Fix README npm badge rendering for scoped package links and add cache controls to reduce stale badge artifacts on GitHub/npm views.
+
 ## 0.2.0
 
 ### Minor Changes
